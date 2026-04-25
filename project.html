@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Car Service Finder</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: Georgia, serif;
+      background: #f5f5f5;
+      color: #333;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    a { color: #1a73e8; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* HEADER */
+    header { background: #1a3c6e; color: white; padding: 0 30px; }
+
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 0 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.15);
+    }
+
+    .site-title { font-size: 1.5rem; font-weight: bold; }
+    .site-title span { color: #f0a500; }
+
+    .header-info { font-size: 0.8rem; color: rgba(255,255,255,0.7); text-align: right; }
+
+    nav { display: flex; flex-wrap: wrap; }
+
+    nav a {
+      color: rgba(255,255,255,0.85);
+      text-decoration: none;
+      padding: 11px 20px;
+      font-size: 0.92rem;
+      border-bottom: 3px solid transparent;
+      transition: background 0.15s, border-color 0.15s;
+      display: block;
+    }
+
+    nav a:hover, nav a.active {
+      background: rgba(255,255,255,0.1);
+      border-bottom-color: #f0a500;
+      color: white;
+      text-decoration: none;
+    }
+
+    /* PAGES */
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* WRAPPER */
+    .wrapper { max-width: 1080px; margin: 0 auto; padding: 28px 20px; }
+
+    /* HERO */
+    .hero {
+      background: #1a3c6e;
+      color: white;
+      text-align: center;
+      padding: 56px 24px;
+    }
+
+    .hero h1 { font-size: 1.9rem; margin-bottom: 12px; }
+
+    .hero p {
+      font-size: 1rem;
+      color: rgba(255,255,255,0.82);
+      max-width: 580px;
+      margin: 0 auto 26px;
+    }
+
+    .hero-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+    /* BUTTONS */
+    .btn {
+      display: inline-block;
+      padding: 9px 24px;
+      font-size: 0.92rem;
+      border: none;
+      cursor: pointer;
+      border-radius: 3px;
+      font-family: Georgia, serif;
+      transition: background 0.15s;
+      text-decoration: none;
+    }
+
+    .btn-primary { background: #f0a500; color: #1a3c6e; font-weight: bold; }
+    .btn-primary:hover { background: #d4920a; color: #1a3c6e; text-decoration: none; }
+
+    .btn-outline { background: transparent; color: white; border: 2px solid white; }
+    .btn-outline:hover { background: white; color: #1a3c6e; text-decoration: none; }
+
+    .btn-blue { background: #1a73e8; color: white; }
+    .btn-blue:hover { background: #1560c0; color: white; text-decoration: none; }
+
+    .btn-gray { background: #e0e0e0; color: #333; }
+    .btn-gray:hover { background: #cacaca; text-decoration: none; }
+
+    /* STATS */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1px;
+      background: #ddd;
+      border: 1px solid #ddd;
+      margin: 28px 0;
+    }
+
+    .stat-box { background: white; text-align: center; padding: 22px 10px; }
+    .stat-number { font-size: 1.9rem; font-weight: bold; color: #1a3c6e; display: block; }
+    .stat-label { font-size: 0.78rem; color: #777; margin-top: 3px; }
+
+    /* HOW IT WORKS */
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1px;
+      background: #ddd;
+      border: 1px solid #ddd;
+      margin-top: 16px;
+    }
+
+    .step { background: white; padding: 22px 18px; }
+
+    .step-num {
+      display: inline-block;
+      width: 34px;
+      height: 34px;
+      background: #1a3c6e;
+      color: white;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 34px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      font-size: 0.9rem;
+    }
+
+    .step h4 { font-size: 0.92rem; color: #1a3c6e; margin-bottom: 5px; }
+    .step p { font-size: 0.84rem; color: #666; }
+
+    /* CARDS */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid #ddd;
+      padding: 18px;
+      border-radius: 3px;
+    }
+
+    .card h3 { font-size: 1rem; color: #1a3c6e; margin-bottom: 6px; }
+    .card p { font-size: 0.85rem; color: #555; }
+
+    /* SECTION HEADING */
+    .section-heading {
+      font-size: 1.15rem;
+      color: #1a3c6e;
+      margin-bottom: 14px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #1a3c6e;
+      font-weight: bold;
+    }
+
+    /* PAGE TITLE */
+    .page-title { font-size: 1.45rem; color: #1a3c6e; margin-bottom: 4px; font-weight: bold; }
+    .page-subtitle {
+      font-size: 0.88rem;
+      color: #666;
+      margin-bottom: 22px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .breadcrumb { font-size: 0.8rem; color: #888; margin-bottom: 16px; }
+    .breadcrumb span { color: #333; }
+
+    /* SEARCH BAR */
+    .search-bar {
+      background: white;
+      border: 1px solid #ddd;
+      padding: 18px;
+      margin-bottom: 20px;
+      border-radius: 3px;
+    }
+
+    .search-bar h3 { font-size: 0.95rem; color: #333; margin-bottom: 12px; }
+
+    .form-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: flex-end;
+    }
+
+    .form-group { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 150px; }
+
+    label { font-size: 0.82rem; color: #555; font-weight: bold; }
+
+    input[type="text"], input[type="email"], select, textarea {
+      border: 1px solid #ccc;
+      padding: 7px 10px;
+      font-size: 0.9rem;
+      font-family: Georgia, serif;
+      border-radius: 3px;
+      width: 100%;
+      background: white;
+      color: #333;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: #1a73e8;
+    }
+
+    textarea { resize: vertical; min-height: 96px; }
+
+    /* RESULT MSG */
+    #result-msg { font-size: 0.84rem; color: #666; margin-bottom: 12px; }
+
+    /* SERVICE LIST */
+    .service-list { display: flex; flex-direction: column; gap: 12px; }
+
+    .service-item {
+      background: white;
+      border: 1px solid #ddd;
+      padding: 16px 20px;
+      border-radius: 3px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      cursor: pointer;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    .service-item:hover {
+      border-color: #1a73e8;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.07);
+    }
+
+    .svc-left h3 { font-size: 1rem; color: #1a3c6e; margin-bottom: 4px; }
+
+    .svc-tag {
+      display: inline-block;
+      font-size: 0.73rem;
+      background: #e8f0fe;
+      color: #1a3c6e;
+      padding: 2px 8px;
+      border-radius: 20px;
+      margin-bottom: 7px;
+    }
+
+    .svc-meta { display: flex; gap: 14px; font-size: 0.82rem; color: #666; flex-wrap: wrap; }
+
+    .svc-right { text-align: right; flex-shrink: 0; }
+
+    .stars { color: #f0a500; }
+    .rating-text { font-size: 0.8rem; color: #777; }
+
+    .badge {
+      display: inline-block;
+      font-size: 0.73rem;
+      padding: 2px 10px;
+      border-radius: 20px;
+      margin-top: 5px;
+      font-weight: bold;
+    }
+
+    .badge-open { background: #e6f4ea; color: #1e7e34; }
+    .badge-closed { background: #fce8e6; color: #c5221f; }
+
+    /* TWO COL */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+    @media (max-width: 660px) { .two-col { grid-template-columns: 1fr; } }
+
+    /* INFO BOX */
+    .info-box {
+      background: white;
+      border: 1px solid #ddd;
+      border-left: 4px solid #1a3c6e;
+      padding: 14px 18px;
+      margin-bottom: 14px;
+      border-radius: 0 3px 3px 0;
+    }
+
+    .info-box h4 { color: #1a3c6e; margin-bottom: 5px; font-size: 0.92rem; }
+    .info-box p { font-size: 0.85rem; color: #555; }
+
+    /* TEAM */
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .team-card {
+      background: white;
+      border: 1px solid #ddd;
+      padding: 18px 12px;
+      text-align: center;
+      border-radius: 3px;
+    }
+
+    .team-avatar {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: #1a3c6e;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      font-weight: bold;
+      margin: 0 auto 10px;
+    }
+
+    .team-name { font-size: 0.86rem; font-weight: bold; color: #333; }
+    .team-id { font-size: 0.73rem; color: #888; margin-top: 3px; }
+
+    /* TABLE */
+    table { width: 100%; border-collapse: collapse; background: white; font-size: 0.88rem; }
+    table th { background: #1a3c6e; color: white; padding: 9px 14px; text-align: left; font-weight: normal; }
+    table td { padding: 9px 14px; border-bottom: 1px solid #eee; }
+    table tr:last-child td { border-bottom: none; }
+    table tr:hover td { background: #fafafa; }
+
+    /* CONTACT */
+    .contact-form { background: white; border: 1px solid #ddd; padding: 22px; border-radius: 3px; }
+    .form-stack { display: flex; flex-direction: column; gap: 13px; }
+
+    /* MODAL */
+    .modal-bg {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      z-index: 999;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-bg.show { display: flex; }
+
+    .modal-box {
+      background: white;
+      border-radius: 4px;
+      padding: 26px;
+      max-width: 460px;
+      width: 90%;
+      position: relative;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 12px;
+      right: 16px;
+      font-size: 1.25rem;
+      cursor: pointer;
+      color: #888;
+      border: none;
+      background: none;
+      line-height: 1;
+    }
+
+    .modal-close:hover { color: #333; }
+
+    .modal-box h3 {
+      font-size: 1.1rem;
+      color: #1a3c6e;
+      margin-bottom: 14px;
+      padding-right: 24px;
+    }
+
+    .modal-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.86rem;
+      padding: 6px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .modal-row span:first-child { color: #777; }
+    .modal-row span:last-child { font-weight: bold; color: #333; }
+
+    .modal-desc {
+      background: #f8f8f8;
+      border-radius: 3px;
+      padding: 11px;
+      font-size: 0.85rem;
+      color: #555;
+      margin: 13px 0;
+      line-height: 1.7;
+    }
+
+    .modal-btns { display: flex; gap: 10px; margin-top: 16px; }
+
+    /* TOAST */
+    .toast {
+      position: fixed;
+      bottom: 22px;
+      right: 22px;
+      background: #333;
+      color: white;
+      padding: 11px 18px;
+      border-radius: 3px;
+      font-size: 0.86rem;
+      z-index: 9999;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.25s, transform 0.25s;
+      pointer-events: none;
+    }
+
+    .toast.show { opacity: 1; transform: translateY(0); }
+
+    /* FOOTER */
+    footer {
+      background: #1a3c6e;
+      color: rgba(255,255,255,0.7);
+      text-align: center;
+      padding: 22px 20px;
+      font-size: 0.83rem;
+      margin-top: 40px;
+    }
+
+    footer p { margin: 3px 0; }
+    footer strong { color: white; }
+
+    /* RESPONSIVE */
+    @media (max-width: 580px) {
+      .header-top { flex-direction: column; gap: 8px; text-align: center; }
+      .header-info { text-align: center; }
+      nav a { padding: 10px 14px; }
+      .hero h1 { font-size: 1.4rem; }
+      .service-item { flex-direction: column; }
+      .svc-right { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-top">
+    <div class="site-title">Car<span>Service</span> Finder</div>
+    <div class="header-info">
+      Govt. Engineering College, Palanpur &nbsp;|&nbsp; GTU &nbsp;|&nbsp; Team ID: 931186
+    </div>
+  </div>
+  <nav>
+    <a class="active" onclick="showPage('home',this)">Home</a>
+    <a onclick="showPage('services',this)">Find Services</a>
+    <a onclick="showPage('about',this)">About</a>
+    <a onclick="showPage('features',this)">Features</a>
+    <a onclick="showPage('contact',this)">Contact</a>
+  </nav>
+</header>
+
+<!-- ===== HOME ===== -->
+<div class="page active" id="page-home">
+
+  <div class="hero">
+    <h1>Find Nearby Vehicle Services</h1>
+    <p>Locate repair shops, maintenance centers, and emergency roadside assistance near you using real-time location data.</p>
+    <div class="hero-btns">
+      <button class="btn btn-primary" onclick="showPage('services', document.querySelectorAll('nav a')[1])">Find a Service</button>
+      <button class="btn btn-outline" onclick="showPage('about', document.querySelectorAll('nav a')[2])">About the Project</button>
+    </div>
+  </div>
+
+  <div class="wrapper">
+
+    <div class="stats-row">
+      <div class="stat-box"><span class="stat-number">240+</span><div class="stat-label">Service Centers</div></div>
+      <div class="stat-box"><span class="stat-number">12</span><div class="stat-label">Service Types</div></div>
+      <div class="stat-box"><span class="stat-number">5</span><div class="stat-label">Team Members</div></div>
+      <div class="stat-box"><span class="stat-number">24/7</span><div class="stat-label">Emergency Support</div></div>
+    </div>
+
+    <h2 class="section-heading">How It Works</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h4>Share Your Location</h4>
+        <p>The app detects your current position automatically using GPS.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h4>Filter Results</h4>
+        <p>Choose service type, max distance, and sort by rating.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h4>Choose a Provider</h4>
+        <p>View details, ratings, and reviews before deciding.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <h4>Get Directions</h4>
+        <p>Navigate to the service center using integrated GPS directions.</p>
+      </div>
+    </div>
+
+    <br>
+
+    <h2 class="section-heading">Who Is This For?</h2>
+    <div class="cards-grid">
+      <div class="card">
+        <h3>Vehicle Owners</h3>
+        <p>Car and motorcycle owners who need quick access to nearby maintenance or repair services.</p>
+      </div>
+      <div class="card">
+        <h3>Travelers</h3>
+        <p>People driving through unfamiliar areas who may face unexpected vehicle issues on the road.</p>
+      </div>
+      <div class="card">
+        <h3>Delivery Drivers</h3>
+        <p>Professionals who depend on their vehicles and need fast, reliable service options.</p>
+      </div>
+      <div class="card">
+        <h3>Fleet Managers</h3>
+        <p>Managers responsible for maintaining multiple vehicles and scheduling timely service.</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== FIND SERVICES ===== -->
+<div class="page" id="page-services">
+  <div class="wrapper">
+    <div class="breadcrumb">Home &rsaquo; <span>Find Services</span></div>
+    <div class="page-title">Find Nearby Services</div>
+    <div class="page-subtitle">Search and filter vehicle service providers near your location.</div>
+
+    <div class="search-bar">
+      <h3>Search Filters</h3>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="svcType">Service Type</label>
+          <select id="svcType">
+            <option value="">All Services</option>
+            <option>Repair Shop</option>
+            <option>Maintenance Center</option>
+            <option>Towing Service</option>
+            <option>Tire Service</option>
+            <option>Oil Change</option>
+            <option>Body Shop</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="svcDist">Max Distance</label>
+          <select id="svcDist">
+            <option value="5">5 km</option>
+            <option value="10" selected>10 km</option>
+            <option value="20">20 km</option>
+            <option value="50">50 km</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="svcStatus">Availability</label>
+          <select id="svcStatus">
+            <option value="">All</option>
+            <option value="open">Open Now</option>
+            <option value="closed">Closed</option>
+          </select>
+        </div>
+        <div class="form-group" style="flex:0;min-width:auto;">
+          <label>&nbsp;</label>
+          <button class="btn btn-blue" onclick="doSearch()">Search</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="result-msg">Showing all available services. Use filters above to narrow results.</div>
+    <div class="service-list" id="service-list"></div>
+  </div>
+</div>
+
+<!-- ===== ABOUT ===== -->
+<div class="page" id="page-about">
+  <div class="wrapper">
+    <div class="breadcrumb">Home &rsaquo; <span>About</span></div>
+    <div class="page-title">About the Project</div>
+    <div class="page-subtitle">Nearby Vehicle Service Selection System Using Location Data — BE Sem 5, Computer Engineering</div>
+
+    <div class="info-box" style="margin-bottom:24px;">
+      <h4>Project Abstract</h4>
+      <p>
+        This system provides users with quick access to vehicle-related services within their vicinity.
+        It uses real-time location data to identify and display nearby service options — including repair
+        shops, maintenance centers, and towing services — tailored to the user's current needs.
+        Users can filter services by type, rating, and distance to make informed decisions.
+        The project also integrates user feedback and reviews for a more reliable experience.
+      </p>
+    </div>
+
+    <h2 class="section-heading">Team Members</h2>
+    <div class="team-grid">
+      <div class="team-card">
+        <div class="team-avatar">MJ</div>
+        <div class="team-name">Mahimn G. Joshi</div>
+        <div class="team-id">230610107016</div>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">AC</div>
+        <div class="team-name">Abhijitsinh J. Chauhan</div>
+        <div class="team-id">230610107009</div>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">HM</div>
+        <div class="team-name">Hiteshkumar P. Makvana</div>
+        <div class="team-id">230610107020</div>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">RG</div>
+        <div class="team-name">Rajgiri M. Goswami</div>
+        <div class="team-id">230610107012</div>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">VS</div>
+        <div class="team-name">Vipulbhai A. Solanki</div>
+        <div class="team-id">230610107055</div>
+      </div>
+    </div>
+
+    <br>
+
+    <h2 class="section-heading">Guided By</h2>
+    <div class="two-col">
+      <div class="info-box">
+        <h4>Dr. Rajyalakshmi H. Jaiswal</h4>
+        <p>Faculty Guide — Computer Engineering Department, GEC Palanpur</p>
+      </div>
+      <div class="info-box">
+        <h4>Prof. Kartik M. Gohil</h4>
+        <p>Faculty Guide — Computer Engineering Department, GEC Palanpur</p>
+      </div>
+    </div>
+
+    <br>
+
+    <h2 class="section-heading">Project Details</h2>
+    <table>
+      <tr><th width="35%">Field</th><th>Details</th></tr>
+      <tr><td>University</td><td>Gujarat Technological University (GTU)</td></tr>
+      <tr><td>College</td><td>Government Engineering College, Palanpur</td></tr>
+      <tr><td>Department</td><td>Computer Engineering</td></tr>
+      <tr><td>Semester</td><td>BE Semester 5</td></tr>
+      <tr><td>Team ID</td><td>931186</td></tr>
+      <tr><td>Project</td><td>Nearby Vehicle Service Selection System Using Location Data</td></tr>
+    </table>
+
+  </div>
+</div>
+
+<!-- ===== FEATURES ===== -->
+<div class="page" id="page-features">
+  <div class="wrapper">
+    <div class="breadcrumb">Home &rsaquo; <span>Features</span></div>
+    <div class="page-title">Features</div>
+    <div class="page-subtitle">Key capabilities of the system.</div>
+
+    <div class="two-col">
+      <div>
+        <h2 class="section-heading">Core Features</h2>
+        <div class="info-box">
+          <h4>Real-Time Location Detection</h4>
+          <p>GPS-based tracking identifies the user's position and shows nearby service providers.</p>
+        </div>
+        <div class="info-box">
+          <h4>Smart Filters</h4>
+          <p>Filter services by type, distance, rating, and availability to narrow down results quickly.</p>
+        </div>
+        <div class="info-box">
+          <h4>GPS Navigation</h4>
+          <p>Integrated navigation directs the user to the selected service center.</p>
+        </div>
+        <div class="info-box">
+          <h4>User Reviews & Ratings</h4>
+          <p>Users can leave and view ratings to help others make informed decisions.</p>
+        </div>
+        <div class="info-box">
+          <h4>Emergency Assistance</h4>
+          <p>Quick access to 24/7 towing and roadside emergency services, even in remote areas.</p>
+        </div>
+        <div class="info-box">
+          <h4>Offline Mode</h4>
+          <p>Nearby service data is cached so users can access it with a poor internet connection.</p>
+        </div>
+      </div>
+
+      <div>
+        <h2 class="section-heading">AEIOU Analysis</h2>
+        <table style="margin-bottom:20px;">
+          <tr><th>Element</th><th>Details</th></tr>
+          <tr><td>Activities</td><td>Search, filter, navigate, review services</td></tr>
+          <tr><td>Environment</td><td>Urban roads, highways, remote areas, home</td></tr>
+          <tr><td>Interactions</td><td>User ↔ App ↔ GPS ↔ Database</td></tr>
+          <tr><td>Objects</td><td>Smartphone, GPS, Internet, Service DB</td></tr>
+          <tr><td>Users</td><td>Owners, travelers, drivers, managers</td></tr>
+        </table>
+
+        <h2 class="section-heading">Pain Points Addressed</h2>
+        <div class="card">
+          <ul style="font-size:0.86rem;color:#555;padding-left:18px;line-height:2.1;">
+            <li>Lack of service options in remote areas</li>
+            <li>Outdated or inaccurate service listings</li>
+            <li>Navigation problems in low-connectivity zones</li>
+            <li>Trust issues with unknown service providers</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== CONTACT ===== -->
+<div class="page" id="page-contact">
+  <div class="wrapper">
+    <div class="breadcrumb">Home &rsaquo; <span>Contact</span></div>
+    <div class="page-title">Contact Us</div>
+    <div class="page-subtitle">Send us a message or get in touch with the project team.</div>
+
+    <div class="two-col">
+      <div class="contact-form">
+        <h3 style="font-size:0.98rem;color:#1a3c6e;margin-bottom:16px;">Send a Message</h3>
+        <div class="form-stack">
+          <div class="form-group">
+            <label for="cName">Full Name</label>
+            <input type="text" id="cName" placeholder="Your name" />
+          </div>
+          <div class="form-group">
+            <label for="cEmail">Email Address</label>
+            <input type="email" id="cEmail" placeholder="your@email.com" />
+          </div>
+          <div class="form-group">
+            <label for="cSubject">Subject</label>
+            <select id="cSubject">
+              <option>General Inquiry</option>
+              <option>Service Feedback</option>
+              <option>Bug Report</option>
+              <option>Partnership</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="cMsg">Message</label>
+            <textarea id="cMsg" placeholder="Write your message here..."></textarea>
+          </div>
+          <div>
+            <button class="btn btn-blue" onclick="submitContact()">Send Message</button>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div style="background:white;border:1px solid #ddd;padding:18px;border-radius:3px;margin-bottom:14px;">
+          <h4 style="color:#1a3c6e;margin-bottom:12px;font-size:0.92rem;">Project Information</h4>
+          <table style="font-size:0.86rem;">
+            <tr><td style="color:#777;padding:5px 0;width:100px;">Institution</td><td>GEC Palanpur</td></tr>
+            <tr><td style="color:#777;padding:5px 0;">University</td><td>GTU</td></tr>
+            <tr><td style="color:#777;padding:5px 0;">Department</td><td>Computer Engineering</td></tr>
+            <tr><td style="color:#777;padding:5px 0;">Semester</td><td>BE Sem 5</td></tr>
+            <tr><td style="color:#777;padding:5px 0;">Team ID</td><td>931186</td></tr>
+          </table>
+        </div>
+
+        <div style="background:#e8f0fe;border:1px solid #c5d5f5;padding:16px 18px;border-radius:3px;">
+          <h4 style="color:#1a3c6e;margin-bottom:8px;font-size:0.9rem;">Faculty Guides</h4>
+          <p style="font-size:0.86rem;color:#333;margin-bottom:4px;">Dr. Rajyalakshmi H. Jaiswal</p>
+          <p style="font-size:0.86rem;color:#333;">Prof. Kartik M. Gohil</p>
+          <p style="font-size:0.78rem;color:#666;margin-top:8px;">Computer Engineering Department</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <p><strong>CarService Finder</strong> — Nearby Vehicle Service Selection System</p>
+  <p>BE Sem 5 | Computer Engineering | Govt. Engineering College, Palanpur | GTU | Team ID: 931186</p>
+  <p style="margin-top:8px;font-size:0.76rem;">&copy; 2024 All rights reserved.</p>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-bg" id="modal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()">&times;</button>
+    <h3 id="modal-title"></h3>
+    <div id="modal-rows"></div>
+    <div class="modal-desc" id="modal-desc"></div>
+    <div class="modal-btns">
+      <button class="btn btn-blue" onclick="showToast('Directions opened!'); closeModal();">Get Directions</button>
+      <button class="btn btn-gray" onclick="closeModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+  /* Page navigation */
+  function showPage(id, el) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+    document.getElementById('page-' + id).classList.add('active');
+    if (el) el.classList.add('active');
+    window.scrollTo(0, 0);
+    if (id === 'services') renderList(services);
+  }
+
+  /* Service data */
+  const services = [
+    { name: "Patel Motors Garage", type: "Repair Shop", dist: 1.2, rating: 4.5, open: true, phone: "98765-43210", hrs: "8 AM – 8 PM", desc: "Full vehicle repair, engine diagnostics, and body work. Trusted by the local community for over 20 years." },
+    { name: "QuickFix Tyres", type: "Tire Service", dist: 2.0, rating: 4.2, open: true, phone: "94265-11234", hrs: "7 AM – 9 PM", desc: "Tyre replacement, balancing, wheel alignment, and puncture repair at competitive prices." },
+    { name: "Roadway Auto Care", type: "Maintenance Center", dist: 2.8, rating: 4.7, open: false, phone: "91234-56789", hrs: "9 AM – 6 PM", desc: "Comprehensive vehicle maintenance including oil changes, filter replacements, and brake service." },
+    { name: "Highway Towing Service", type: "Towing Service", dist: 3.5, rating: 4.0, open: true, phone: "98000-12345", hrs: "24 Hours", desc: "Emergency towing and roadside assistance available round the clock. Flat-bed trucks available." },
+    { name: "Speed Lube Center", type: "Oil Change", dist: 4.1, rating: 3.9, open: true, phone: "93456-78901", hrs: "8 AM – 7 PM", desc: "Fast oil change service in under 30 minutes. All oil grades and filter brands available." },
+    { name: "Metro Body Shop", type: "Body Shop", dist: 5.3, rating: 4.3, open: false, phone: "99887-66554", hrs: "9 AM – 5 PM", desc: "Dent removal, paint work, and accident repair. Insurance claim assistance provided." },
+    { name: "City Auto Workshop", type: "Repair Shop", dist: 6.0, rating: 4.1, open: true, phone: "88776-55443", hrs: "8 AM – 8 PM", desc: "General repairs for all vehicle brands. Specialists in transmission and suspension work." },
+    { name: "Safe Drive Maintenance", type: "Maintenance Center", dist: 7.2, rating: 4.6, open: true, phone: "77665-44332", hrs: "9 AM – 7 PM", desc: "Scheduled maintenance and multi-point vehicle inspection. Certified technicians on duty." }
+  ];
+
+  let currentList = [...services];
+
+  function starHTML(r) {
+    let s = '';
+    for (let i = 1; i <= 5; i++) s += i <= Math.floor(r) ? '★' : '☆';
+    return s;
+  }
+
+  function renderList(list) {
+    const container = document.getElementById('service-list');
+    if (!list.length) {
+      container.innerHTML = '<p style="color:#c5221f;font-size:0.88rem;">No services found. Try adjusting your filters.</p>';
+      return;
+    }
+    container.innerHTML = list.map((s, i) => `
+      <div class="service-item" onclick="openModal(${i})">
+        <div class="svc-left">
+          <h3>${s.name}</h3>
+          <span class="svc-tag">${s.type}</span>
+          <div class="svc-meta">
+            <span>&#128205; ${s.dist} km away</span>
+            <span>&#128222; ${s.phone}</span>
+            <span>&#9200; ${s.hrs}</span>
+          </div>
+        </div>
+        <div class="svc-right">
+          <div class="stars">${starHTML(s.rating)}</div>
+          <div class="rating-text">${s.rating} / 5.0</div>
+          <span class="badge ${s.open ? 'badge-open' : 'badge-closed'}">${s.open ? 'Open Now' : 'Closed'}</span>
+        </div>
+      </div>
+    `).join('');
+    currentList = list;
+  }
+
+  function doSearch() {
+    const type = document.getElementById('svcType').value;
+    const dist = +document.getElementById('svcDist').value;
+    const status = document.getElementById('svcStatus').value;
+    let res = services.filter(s => {
+      if (type && s.type !== type) return false;
+      if (s.dist > dist) return false;
+      if (status === 'open' && !s.open) return false;
+      if (status === 'closed' && s.open) return false;
+      return true;
+    });
+    document.getElementById('result-msg').textContent =
+      `Found ${res.length} service(s) within ${dist} km.`;
+    renderList(res);
+  }
+
+  renderList(services);
+
+  /* Modal */
+  function openModal(i) {
+    const s = currentList[i];
+    document.getElementById('modal-title').textContent = s.name;
+    document.getElementById('modal-rows').innerHTML = `
+      <div class="modal-row"><span>Type</span><span>${s.type}</span></div>
+      <div class="modal-row"><span>Rating</span><span>${starHTML(s.rating)} &nbsp;${s.rating}/5.0</span></div>
+      <div class="modal-row"><span>Distance</span><span>${s.dist} km</span></div>
+      <div class="modal-row"><span>Hours</span><span>${s.hrs}</span></div>
+      <div class="modal-row"><span>Phone</span><span>${s.phone}</span></div>
+      <div class="modal-row"><span>Status</span><span style="color:${s.open ? '#1e7e34' : '#c5221f'}">${s.open ? 'Open Now' : 'Currently Closed'}</span></div>
+    `;
+    document.getElementById('modal-desc').textContent = s.desc;
+    document.getElementById('modal').classList.add('show');
+  }
+
+  function closeModal() {
+    document.getElementById('modal').classList.remove('show');
+  }
+
+  document.getElementById('modal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+
+  /* Contact form */
+  function submitContact() {
+    const name = document.getElementById('cName').value.trim();
+    const email = document.getElementById('cEmail').value.trim();
+    const msg = document.getElementById('cMsg').value.trim();
+    if (!name || !email || !msg) {
+      showToast('Please fill in all required fields.');
+      return;
+    }
+    showToast('Message sent successfully!');
+    document.getElementById('cName').value = '';
+    document.getElementById('cEmail').value = '';
+    document.getElementById('cMsg').value = '';
+  }
+
+  /* Toast */
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+</script>
+
+</body>
+</html>
